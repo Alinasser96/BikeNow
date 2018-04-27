@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.aly.bikenow.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/signind"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/rsignup2"
+                android:layout_alignStart="@+id/rsignup2"
+                android:layout_below="@+id/repasswordup2"
+                android:background="@drawable/border"
+                android:onClick="signin2d"
+                android:text="sign in driver" />
+
+            <Button
+                android:id="@+id/rsignup2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/repasswordup2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/repasswordup2"
+                android:background="@drawable/border"
+                android:onClick="signup2d"
+                android:text="sign up driver" />
+
+            <EditText
+                android:id="@+id/passwordin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/emailup2"
+                android:layout_alignRight="@+id/emailup2"
+                android:layout_below="@+id/emailup2"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/a4"
+                android:ems="10"
+                android:hint="password"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <EditText
+                android:id="@+id/emailin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/nameup2"
+                android:layout_alignStart="@+id/nameup2"
+                android:layout_below="@+id/nameup2"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/a5"
+                android:ems="10"
+                android:hint="email"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="333dp"
+                app:srcCompat="@drawable/mmmmm" />
+
+            <EditText
+                android:id="@+id/nameup2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/a3"
+                android:ems="10"
+                android:hint="name"
+                android:inputType="textPersonName"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <EditText
+                android:id="@+id/emailup2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/nameup2"
+                android:layout_alignStart="@+id/nameup2"
+                android:layout_below="@+id/nameup2"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/a5"
+                android:ems="10"
+                android:hint="email"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <EditText
+                android:id="@+id/passwordup2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/emailup2"
+                android:layout_alignRight="@+id/emailup2"
+                android:layout_below="@+id/emailup2"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/a4"
+                android:ems="10"
+                android:hint="password"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <EditText
+                android:id="@+id/repasswordup2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/passwordup2"
+                android:layout_alignStart="@+id/passwordup2"
+                android:layout_below="@+id/passwordup2"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/border_txt"
+                android:drawableLeft="@drawable/aa5"
+                android:ems="10"
+                android:hint="repassword"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:textColorHint="@color/pink" />
+
+            <Button
+                android:id="@+id/signin22"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/repasswordup2"
+                android:layout_alignStart="@+id/repasswordup2"
+                android:layout_below="@+id/repasswordup2"
+                android:background="@drawable/border"
+                android:onClick="signin2"
+                android:text=" Sign in customer" />
+
+            <Button
+                android:id="@+id/rsignup"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/repasswordup2"
+                android:layout_alignStart="@+id/repasswordup2"
+                android:layout_alignTop="@+id/rsignup2"
+                android:background="@drawable/border"
+                android:onClick="signup2"
+                android:text="sign up customer" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rsignup"
+                android:layout_centerHorizontal="true"
+                android:background="@color/colorPrimary"
+                android:onClick="createnew"
+                android:text="create new"
+                android:textColor="@color/pink" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/button8"
+                android:layout_alignBottom="@+id/button8"
+                android:layout_centerHorizontal="true"
+                android:background="@color/colorPrimary"
+                android:onClick="already"
+                android:text="have alreday?"
+                android:textColor="@color/pink"
+                android:textColorHint="@color/pink" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="17dp"
+            android:background="#8ccfbb"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/button11"
+                android:layout_alignStart="@+id/button11"
+                android:layout_below="@+id/emailup2"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/border"
+                android:onClick="signin"
+                android:text="SIGN IN"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button10"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/border"
+                android:onClick="signup"
+                android:text="SIGN UP"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/circle1" />
+
+            <TextView
+                android:id="@+id/emailup2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignLeft="@+id/imageView2"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imageView2"
+                android:layout_marginLeft="18dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="110dp"
+                android:background="@drawable/circle2"
+                android:gravity="center"
+                android:text="WELCOME"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

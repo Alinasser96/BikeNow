@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "984853027831",
+    "firebase_url": "https://bikeme-cc95b.firebaseio.com",
+    "project_id": "bikeme-cc95b",
+    "storage_bucket": "bikeme-cc95b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984853027831:android:595b6bc18103d096",
+        "android_client_info": {
+          "package_name": "com.aly.bikenow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984853027831-ln9m5kaga1mquaus0binkvjifmrpmt2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aly.bikenow",
+            "certificate_hash": "bfe3f7973be556713fdc913cb5933fabe5ec0485"
+          }
+        },
+        {
+          "client_id": "984853027831-0c3u6b33a6u9r8f5palqgqvksl8empqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAepuasCqoWHCO6SdgrvvV7DxgSnIdz7jY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984853027831-0c3u6b33a6u9r8f5palqgqvksl8empqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984853027831:android:36c4d0655ecbfd7d",
+        "android_client_info": {
+          "package_name": "com.aly.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984853027831-kcvkqdteitaln6p16kl5agreqv9b9la9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aly.myapplication",
+            "certificate_hash": "bfe3f7973be556713fdc913cb5933fabe5ec0485"
+          }
+        },
+        {
+          "client_id": "984853027831-0c3u6b33a6u9r8f5palqgqvksl8empqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAepuasCqoWHCO6SdgrvvV7DxgSnIdz7jY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984853027831-0c3u6b33a6u9r8f5palqgqvksl8empqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
