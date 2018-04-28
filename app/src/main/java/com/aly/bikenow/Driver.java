@@ -25,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -71,6 +72,14 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
 
 
                 }
+                else{
+                    customerID="";
+                    if(pickupmarker!=null){
+                    pickupmarker.remove();}
+                    if(assignedvaluelitner!=null){
+                    assignedPickUpRef.removeEventListener(assignedvaluelitner);
+                        }
+                }
             }
 
             @Override
@@ -79,12 +88,15 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
             }
         });
     }
+    private Marker pickupmarker;
+    DatabaseReference assignedPickUpRef;
+    private ValueEventListener assignedvaluelitner;
     private void getAssignedCustomerPickUpLocation(){
-        DatabaseReference assignedPickUpRef =FirebaseDatabase.getInstance().getReference().child("customerRequests").child(customerID).child("l");
-        assignedPickUpRef.addValueEventListener(new ValueEventListener() {
+         assignedPickUpRef =FirebaseDatabase.getInstance().getReference().child("customerRequests").child(customerID).child("l");
+        assignedvaluelitner=assignedPickUpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if(dataSnapshot.exists()&& !customerID.equals("")) {
                     List<Object> map = (List< Object>) dataSnapshot.getValue();
                     double locationlat=0;
                     double locationlng =0;
@@ -100,7 +112,7 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
                     }
 
                     LatLng driver= new LatLng(locationlat,locationlng);
-                   mMap.addMarker(new MarkerOptions().position(driver).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.biker)));
+                    pickupmarker= mMap.addMarker(new MarkerOptions().position(driver).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.biker)));
                 }
             }
 
