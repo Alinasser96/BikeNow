@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,8 +22,12 @@ import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,6 +57,7 @@ public class Customer extends  AppCompatActivity implements OnMapReadyCallback, 
     String userId;
     Button pick;
     private LatLng pickuprequet;
+    String destination;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +67,23 @@ public class Customer extends  AppCompatActivity implements OnMapReadyCallback, 
         mapFragment.getMapAsync(this);
         pick = findViewById(R.id.button3);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+              destination=place.getName().toString();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+            }
+        });
+
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -174,6 +197,10 @@ public class Customer extends  AppCompatActivity implements OnMapReadyCallback, 
                 picupMarker.remove();
 
             }
+            if(driverMarker!=null){
+                driverMarker.remove();
+
+            }
             pick.setText("Request");
 
         }
@@ -215,10 +242,12 @@ public class Customer extends  AppCompatActivity implements OnMapReadyCallback, 
                     driverfoundID=key;
                     System.out.println(key);
 
-                    DatabaseReference drivred =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverfoundID);
+                    DatabaseReference drivred =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverfoundID).child("customerRequest");
                     String customerID= FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map= new HashMap();
                     map.put("customerRideID",customerID);
+                    map.put("destination",destination);
+
                     drivred.updateChildren(map);
 
                     getDriverLocation();

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -44,6 +45,8 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
     Location mlastlocation;
     LocationRequest mlocatonRequest;
     String userId,customerID="";
+    TextView mcustomerDest;
+
 
 
     @Override
@@ -54,13 +57,13 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
          userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+            mcustomerDest = findViewById(R.id.customerDestination);
          getAssignedCustomer();
 
     }
     private void getAssignedCustomer(){
         String driverID= FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assigned =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverID).child("customerRideID");
+        DatabaseReference assigned =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverID).child("customerRequest").child("customerRideID");
         assigned.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,6 +72,7 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
 
                             customerID=dataSnapshot.getValue().toString();
                             getAssignedCustomerPickUpLocation();
+                            getAssiendDest();
 
 
                 }
@@ -88,9 +92,37 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
             }
         });
     }
+    private void getAssiendDest(){
+        String driverID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assigned =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverID).child("customerRequest").child("destination");
+        assigned.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String dest = dataSnapshot.getValue().toString();
+                    mcustomerDest.setText(dest);
+
+
+
+
+                }
+                else{
+                    mcustomerDest.setText("not");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
     private Marker pickupmarker;
     DatabaseReference assignedPickUpRef;
+
     private ValueEventListener assignedvaluelitner;
+
     private void getAssignedCustomerPickUpLocation(){
          assignedPickUpRef =FirebaseDatabase.getInstance().getReference().child("customerRequests").child(customerID).child("l");
         assignedvaluelitner=assignedPickUpRef.addValueEventListener(new ValueEventListener() {
