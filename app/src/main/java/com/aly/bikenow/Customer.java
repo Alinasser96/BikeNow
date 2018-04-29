@@ -163,6 +163,35 @@ public class Customer extends  AppCompatActivity implements OnMapReadyCallback, 
     }
 
     public void out(View view) {
+        requestBol=false;
+        geoQuery.removeAllListeners();
+        driverlocatioref.removeEventListener(driverLocationListner);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequests");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userId, new
+                GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        //Do some stuff if you want to
+                    }
+                });
+
+        if(driverFound!= null){
+            DatabaseReference drivred =FirebaseDatabase.getInstance().getReference().child("drivers").child(driverfoundID);
+            drivred.setValue(true);
+            driverfoundID = null;
+        }
+        driverFound=false;
+        r=1;
+        if(picupMarker!=null){
+            picupMarker.remove();
+
+        }
+        if(driverMarker!=null){
+            driverMarker.remove();
+
+        }
+        pick.setText("Request");
         FirebaseAuth.getInstance().signOut();
         Intent intent2 = new Intent(this, MainActivity.class);
         startActivity(intent2);

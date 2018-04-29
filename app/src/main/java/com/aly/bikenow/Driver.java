@@ -13,7 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,6 +34,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,10 +43,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Driver extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class Driver extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener,RoutingListener {
 
     private GoogleMap mMap;
     GoogleApiClient mgoogleApiClient;
@@ -46,6 +55,9 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
     LocationRequest mlocatonRequest;
     String userId,customerID="";
     TextView mcustomerDest;
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+
 
 
 
@@ -53,6 +65,7 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        polylines = new ArrayList<>();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -77,7 +90,9 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
 
                 }
                 else{
+                    erasePoly();
                     customerID="";
+                    mcustomerDest.setText("destiance ");
                     if(pickupmarker!=null){
                     pickupmarker.remove();}
                     if(assignedvaluelitner!=null){
@@ -143,8 +158,9 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
 
                     }
 
-                    LatLng driver= new LatLng(locationlat,locationlng);
-                    pickupmarker= mMap.addMarker(new MarkerOptions().position(driver).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.biker)));
+                    LatLng pickupLatLng= new LatLng(locationlat,locationlng);
+                    pickupmarker= mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.biker)));
+                    getRouteToMarker(pickupLatLng);
                 }
             }
 
@@ -155,6 +171,19 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
         });
 
     }
+
+    private void getRouteToMarker(LatLng pickupLatLng) {
+            if(mlastlocation!=null) {
+                Routing routing = new Routing.Builder()
+                        .travelMode(AbstractRouting.TravelMode.DRIVING)
+                        .withListener(this)
+                        .alternativeRoutes(false)
+                        .waypoints(new LatLng(mlastlocation.getLatitude(), mlastlocation.getLongitude()), pickupLatLng)
+                        .build();
+                routing.execute();
+            }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -289,6 +318,14 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
     }
 
     public void out(View view) {
+        erasePoly();
+        customerID="";
+        mcustomerDest.setText("destiance ");
+        if(pickupmarker!=null){
+            pickupmarker.remove();}
+        if(assignedvaluelitner!=null){
+            assignedPickUpRef.removeEventListener(assignedvaluelitner);
+        }
         LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleApiClient, this);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
@@ -307,6 +344,58 @@ public class Driver extends FragmentActivity implements OnMapReadyCallback, Goog
     }
 
 
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+        if(e != null) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+
+        if(polylines.size()>0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i <route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+        }
+        }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+    private void erasePoly(){
+        for(Polyline line :polylines){
+            line.remove();
+        }
+        polylines.clear();
+    }
 }
 
 
