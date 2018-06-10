@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BikeNow</string>
     <string name="title_activity_maps">Map</string>
+    <string name="facebook_app_id">181889132522892</string>
+    <string name="fb_login_protocol_scheme">fb181889132522892</string>
+
 </resources>
