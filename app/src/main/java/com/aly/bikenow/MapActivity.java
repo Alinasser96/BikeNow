@@ -45,9 +45,9 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
     private Location mLastLocation;
     private List<Polyline> polyLines;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
-    private int flag = 0 ;
-    private TextView Dlat;
-    private TextView Dlng;
+    private int firstTimeFlag = 0 ;
+    private TextView dLat;
+    private TextView dLng;
 
 
     @Override
@@ -60,16 +60,16 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
         polyLines = new ArrayList<>();
 
 
-        TextView namet = findViewById(R.id.pname);
+        TextView nameTV = findViewById(R.id.pname);
         ImageView mProfileImage = findViewById(R.id.imageView2);
-        Dlat = findViewById(R.id.latt);
-        Dlng = findViewById(R.id.longt);
+        dLat = findViewById(R.id.latt);
+        dLng = findViewById(R.id.longt);
 
 
         String name = getIntent().getExtras().getString("Name");
-        String mprofileIMageUrl = getIntent().getExtras().getString("Url");
-        namet.setText(name);
-        Glide.with(getApplication()).load(mprofileIMageUrl).into(mProfileImage);
+        String mProfileImageUrl = getIntent().getExtras().getString("Url");
+        nameTV.setText(name);
+        Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
 
 
 
@@ -111,11 +111,11 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         mLastLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-
-        if(flag == 0 ){
+        // check if its app opening to make camera zoom auto then by user
+        if(firstTimeFlag == 0 ){
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-            flag =1 ;
+            firstTimeFlag =1 ;
         }
 
 
@@ -123,19 +123,22 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+    //         ******* 1st make map ready and connect it to google api *********
 
 
+    //try to connect the map with google api by making location request
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest mlocatonRequest = new LocationRequest();
-        mlocatonRequest.setInterval(1000);
-        mlocatonRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mlocatonRequest.setFastestInterval(1000);
-        //check again the location
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setFastestInterval(1000);
+        //check again the location permission
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mlocatonRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
     }
 
@@ -154,16 +157,17 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    //                     ******** 2nd listen for click locate **********
 
-
+    // click event to locate th given lat &long
     private Marker destMarker;
     public void request(View view) {
         if(destMarker!=null){
             destMarker.remove();}
-        if(!Dlat.getText().toString().matches("")&&!Dlng.getText().toString().matches("")){
-        double latitude = Double.parseDouble(Dlat.getText().toString());
-        double longtude = Double.parseDouble(Dlng.getText().toString());
-        LatLng dest= new LatLng(latitude, longtude);
+        if(!dLat.getText().toString().matches("")&&!dLng.getText().toString().matches("")){
+        double latitude = Double.parseDouble(dLat.getText().toString());
+        double longitude = Double.parseDouble(dLng.getText().toString());
+        LatLng dest= new LatLng(latitude, longitude);
         destMarker= mMap.addMarker(new MarkerOptions().position(dest).title("destination ").icon(BitmapDescriptorFactory.fromResource(R.mipmap.bike)));
         getRouteToMarker(dest);
 
@@ -179,13 +183,7 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
-
-
-
-
-
-
+    //     ******* 3rd is draw the route between current location and destination *****
 
 
     private void getRouteToMarker(LatLng pickupLatLng) {
@@ -216,7 +214,7 @@ public class MapActivity extends  AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
-
+        //delete if a previous route is exist
         if(polyLines.size()>0) {
             for (Polyline poly : polyLines) {
                 poly.remove();

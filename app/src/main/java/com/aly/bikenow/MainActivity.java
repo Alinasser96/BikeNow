@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private FirebaseAuth auth;
-    private Profile profile;
-    private String mprofileIMageUrl;
     private ProgressDialog dialog;
 
     @Override
@@ -53,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         dialog = new ProgressDialog(MainActivity.this);
         FirebaseUser user = auth.getCurrentUser();
-        //check for gps permission
+
+        //                            ****** 1st check for gps permission  *******
+
         if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
-        }else{
-
         }
 
         if(user !=null){
@@ -72,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    //                                ****** 2nd check if user is already signed in *******
     @Override
     public void onStart() {
         super.onStart();
@@ -79,16 +79,13 @@ public class MainActivity extends AppCompatActivity {
         Profile profile = Profile.getCurrentProfile();
         if(profile!=null){
 
-            profile=Profile.getCurrentProfile();
-            String pname = profile.getName();
-            Intent i = new Intent(MainActivity.this, MapActivity.class);
-            mprofileIMageUrl=profile.getProfilePictureUri(100,100).toString();
-            i.putExtra("Name",pname );
-            i.putExtra("Url",mprofileIMageUrl );
-            startActivity(i);
+            holdDataAndGoNext();
 
         }
     }
+
+
+    //                                   ******* 3rd listen for login with facebook *******
 
     public void login(View view) {
 
@@ -129,19 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             dialog.dismiss();
 
                         if(task.isSuccessful()){
-
-                            profile=Profile.getCurrentProfile();
-                            String pname = profile.getName();
-                            Intent i = new Intent(MainActivity.this, MapActivity.class);
-                            mprofileIMageUrl=profile.getProfilePictureUri(100,100).toString();
-                            i.putExtra("Name",pname );
-                            i.putExtra("Url",mprofileIMageUrl );
-                            startActivity(i);
-
-
-
-                        }else{
-
+                            holdDataAndGoNext();
                         }
                     }
                 });
@@ -154,6 +139,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public void holdDataAndGoNext(){
+        Profile profile = Profile.getCurrentProfile();
+        String pName = profile.getName();
+        Intent i = new Intent(MainActivity.this, MapActivity.class);
+        String mProfileImageUrl = profile.getProfilePictureUri(100, 100).toString();
+        i.putExtra("Name",pName );
+        i.putExtra("Url", mProfileImageUrl);
+        startActivity(i);
     }
 
 }
